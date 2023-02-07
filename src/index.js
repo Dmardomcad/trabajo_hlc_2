@@ -1,9 +1,12 @@
 const express = require("express")
 const app = express()
+const cookieParser = require("cookie-parser");
 const v1 = require("./routes/v1/indexRoutes")
+const auth = require("./utils/authentication")
 
 
 app.use(express.json())
+app.use(cookieParser())
 app.use((req, res, next) => {
   let date = new Date().toLocaleTimeString();
   console.log(
@@ -13,7 +16,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/v1/api", v1.router)
+app.use(auth.login)
+app.use("/v1/api", v1.router);
 
 
 const PORT = process.env.PORT || 3001
